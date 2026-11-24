@@ -15,6 +15,7 @@ import struct
 import zlib
 
 W, H = 1024, 1024
+STAMP_ANGLE_DEG = -14  # SOLD stamp tilt, degrees
 
 # ---------------------------------------------------------------- palette
 YELLOW = (255, 200, 0)      # meme background
@@ -223,7 +224,7 @@ def draw_shop(cv):
     stamp = Canvas(300, 120, MAGENTA)
     stamp.rounded_rect(8, 8, 292, 112, 12, RED, outline=WHITE, ow=4)
     draw_text(stamp, 0, 34, 8, "SOLD", WHITE, center_x=150)
-    cv.blit_rotated(stamp, 265, 448, -14, MAGENTA)
+    cv.blit_rotated(stamp, 265, 448, STAMP_ANGLE_DEG, MAGENTA)
 
 
 def draw_robot(cv):
@@ -332,6 +333,8 @@ def main():
         os.makedirs(out_dir, exist_ok=True)
         out_path = os.path.join(out_dir, "entry.png")
     cv = build()
+    assert (cv.w, cv.h) == (W, H) == (1024, 1024), \
+        "output must meet the 1024x1024 contract"
     size = write_png(out_path, cv)
     print(f"wrote {out_path} ({cv.w}x{cv.h}, {size} bytes)")
 
